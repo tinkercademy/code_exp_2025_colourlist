@@ -4,8 +4,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import BlockRGB from "./components/BlockRGB";
 import { useState } from "react";
+import DetailsScreen from "./components/DetailsScreen";
 
-function HomeScreen() {
+function HomeScreen({ navigation }) {
   const [colours, setColours] = useState([
     // Initial values with 3 colours
     { red: 255, green: 0, blue: 0, key: "1" },
@@ -14,7 +15,19 @@ function HomeScreen() {
   ]);
 
   function renderItem({ item }) {
-    return <BlockRGB red={item.red} green={item.green} blue={item.blue} />;
+    return (
+      <Pressable
+        onPress={() => {
+          navigation.navigate('Details', {
+            red: item.red,
+            green: item.green,
+            blue: item.blue
+          });
+        }}
+      >
+        <BlockRGB red={item.red} green={item.green} blue={item.blue} />
+      </Pressable>
+    );
   }
 
   function addColour() {
@@ -50,6 +63,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Details" component={DetailsScreen} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
