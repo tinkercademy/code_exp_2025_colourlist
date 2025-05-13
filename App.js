@@ -1,9 +1,9 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, FlatList, View, Pressable, Text } from "react-native";
+import { StyleSheet, FlatList, View, Pressable, Text, Button } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import BlockRGB from "./components/BlockRGB";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DetailsScreen from "./components/DetailsScreen";
 
 function HomeScreen({ navigation }) {
@@ -16,17 +16,19 @@ function HomeScreen({ navigation }) {
 
   function renderItem({ item }) {
     return (
-      <Pressable
-        onPress={() => {
-          navigation.navigate('Details', {
-            red: item.red,
-            green: item.green,
-            blue: item.blue
-          });
-        }}
-      >
-        <BlockRGB red={item.red} green={item.green} blue={item.blue} />
-      </Pressable>
+      <View>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('Details', {
+              red: item.red,
+              green: item.green,
+              blue: item.blue
+            });
+          }}
+        >
+          <BlockRGB red={item.red} green={item.green} blue={item.blue} />
+        </Pressable>
+      </View>
     );
   }
 
@@ -42,11 +44,16 @@ function HomeScreen({ navigation }) {
     ]);
   }
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button onPress={addColour} title="Add colour" />
+      ),
+    });
+  }, [navigation, addColour]);
+
   return (
     <View style={styles.container}>
-      <Pressable style={styles.addButton} onPress={addColour}>
-        <Text style={styles.addButtonText}>Add colour</Text>
-      </Pressable>
       <FlatList
         style={{ width: "100%" }}
         data={colours}
@@ -76,17 +83,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "top"
-  },
-  addButton: {
-    backgroundColor: 'blue',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginVertical: 10
-  },
-  addButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center'
   }
 });
